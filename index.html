@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BRIDGEMANN ICON — Aus Silizium wird Software</title>
+<meta name="description" content="BRIDGEMANN ICON — unabhängiges Studio für mobile Apps. Aus Silizium wird Software. Geschmiedet, nicht zusammengeklickt." />
+
+<!--
+  ============================================================
+  BRIDGEMANN ICON — Hero-Seite (Prototyp)
+  ------------------------------------------------------------
+  ZUM EINBINDEN DEINER ASSETS:
+  1) Lege "hero.mp4" (dein Seedance-Forge-Clip) neben diese Datei.
+  2) Lege "hero-poster.jpg" daneben (z. B. Version 1 als Standbild) —
+     wird gezeigt, solange das Video lädt.
+  3) Logo: aktuell als sauberer CSS-Schriftzug gesetzt. Für dein
+     echtes Vektor-Logo den Block <!-- LOGO --> unten ersetzen
+     (am besten transparentes SVG/PNG).
+  4) Impressum-Daten im Footer ausfüllen (Platzhalter markiert).
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --ink:      #090E1A;   /* near-black navy — the workshop */
+    --ink-2:    #0C1424;
+    --panel:    #12203B;   /* lifted navy — cards */
+    --line:     rgba(33,182,232,.16);
+    --text:     #E7ECF6;   /* broken white */
+    --muted:    #8595B3;   /* slate captions */
+    --cyan:     #21B6E8;   /* cooled code */
+    --cyan-dim: #1689b3;
+    --ember:    #F5A623;   /* the spark */
+    --maxw:     1180px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--cyan); color: var(--ink); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- shared layout ---------- */
+  .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 28px; }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: .8rem;
+    letter-spacing: .04em;
+    color: var(--cyan);
+    text-transform: none;
+    margin-bottom: 1.4rem;
+    display: inline-block;
+  }
+  .eyebrow .slash { color: var(--ember); }
+
+  h2.section-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4.6vw, 3.2rem);
+    line-height: 1.05;
+    letter-spacing: -.015em;
+  }
+
+  /* ---------- scroll progress: heat -> cool ---------- */
+  .forge-rail {
+    position: fixed;
+    top: 0; left: 0;
+    width: 3px; height: 100vh;
+    background: rgba(255,255,255,.05);
+    z-index: 60;
+  }
+  .forge-rail__fill {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 0%;
+    background: linear-gradient(to bottom, var(--ember) 0%, #e07b3a 28%, var(--cyan) 100%);
+    box-shadow: 0 0 10px rgba(33,182,232,.5);
+  }
+  .forge-rail__spark {
+    position: absolute; left: 50%; top: 0;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 12px 2px var(--cyan), 0 0 4px 1px #fff;
+    opacity: 0;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px clamp(20px, 4vw, 44px);
+    transition: background .4s ease, backdrop-filter .4s ease, border-color .4s ease;
+    border-bottom: 1px solid transparent;
+  }
+  header.scrolled {
+    background: rgba(9,14,26,.72);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .mark {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: .02em;
+    display: flex; gap: .5ch; align-items: baseline;
+  }
+  .mark .icon {
+    color: var(--cyan);
+    font-weight: 500;
+    letter-spacing: .34em;
+    font-size: .82rem;
+    margin-left: .15ch;
+  }
+  .nav-contact {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: .82rem;
+    color: var(--muted);
+    transition: color .25s ease;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+  .nav-contact:hover { color: var(--ember); border-bottom-color: var(--ember); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex; align-items: center;
+    overflow: hidden;
+    /* graceful fallback behind the video: a forge glow on navy */
+    background:
+      radial-gradient(120% 90% at 22% 78%, rgba(245,166,35,.18), transparent 42%),
+      radial-gradient(100% 80% at 78% 40%, rgba(33,182,232,.10), transparent 55%),
+      linear-gradient(180deg, #070B14, #0A1120);
+  }
+  .hero__video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .hero__scrim {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(9,14,26,.55) 0%, rgba(9,14,26,.15) 40%, rgba(9,14,26,.85) 100%),
+      linear-gradient(90deg, rgba(9,14,26,.7) 0%, rgba(9,14,26,.1) 55%, transparent 100%);
+  }
+  .hero__inner { position: relative; z-index: 2; padding-block: 120px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .hero__eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: .82rem; color: var(--cyan);
+    letter-spacing: .02em;
+    margin-bottom: 1.6rem;
+    opacity: 0; transform: translateY(14px);
+    animation: rise .9s .15s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .hero__eyebrow .slash { color: var(--ember); }
+  .hero__lockup {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    gap: clamp(14px, 2.4vw, 26px);
+    opacity: 0;
+    animation: forge 1.3s 1.9s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .hero__lockup::before {
+    content: ""; position: absolute; left: 50%; top: 52%;
+    width: 130%; height: 210%; transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, rgba(33,182,232,.22), transparent 72%);
+    filter: blur(8px); z-index: -1;
+    animation: glowpulse 4.5s ease-in-out 3.2s infinite;
+  }
+  .logo-mark {
+    width: clamp(62px, 11vw, 120px); height: auto;
+    filter: drop-shadow(0 0 18px rgba(33,182,232,.45));
+  }
+  h1.logo-word {
+    font-family: "Space Grotesk", sans-serif; font-weight: 700;
+    font-size: clamp(1.85rem, 6.4vw, 4.1rem);
+    letter-spacing: .01em; line-height: 1;
+    display: flex; align-items: baseline; gap: .5ch;
+    flex-wrap: wrap; justify-content: center;
+  }
+  h1.logo-word .lw-icon {
+    color: var(--cyan); font-weight: 500;
+    letter-spacing: .3em; font-size: .42em;
+  }
+  .hero__tag {
+    margin-top: clamp(16px, 2.6vw, 28px);
+    font-size: clamp(1.02rem, 1.8vw, 1.3rem);
+    color: #C3CEE2; max-width: 40ch;
+    opacity: 0; transform: translateY(18px);
+    animation: rise 1s 2.7s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+
+  @keyframes forge {
+    0%   { opacity: 0; transform: translateY(10px) scale(.9); filter: blur(12px); }
+    55%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  @keyframes glowpulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+  .hero__cue {
+    position: absolute; left: 50%; bottom: 26px; z-index: 2;
+    transform: translateX(-50%);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: .72rem; color: var(--muted);
+    letter-spacing: .18em; text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0; animation: rise 1s 1s ease forwards;
+  }
+  .hero__cue .bar { width: 1px; height: 34px; background: linear-gradient(var(--ember), transparent); animation: cue 1.9s ease-in-out infinite; }
+
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  @keyframes cue { 0%,100% { opacity: .3; transform: scaleY(.6); transform-origin: top; } 50% { opacity: 1; transform: scaleY(1); } }
+
+  /* ---------- origin narrative ---------- */
+  .origin { padding-block: clamp(110px, 16vh, 200px); position: relative; }
+  .narrative { margin-top: 2.4rem; }
+  .narrative p {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 4.4vw, 2.9rem);
+    line-height: 1.18;
+    letter-spacing: -.015em;
+    color: #5d6f90;
+    margin-bottom: .35em;
+    transition: color .7s ease, opacity .7s ease, transform .7s ease;
+    opacity: .25; transform: translateY(16px);
+  }
+  .narrative p.lit { color: var(--text); opacity: 1; transform: translateY(0); }
+  .narrative p .accent { color: var(--cyan); }
+
+  .origin__body {
+    margin-top: 3.4rem;
+    max-width: 56ch;
+    font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+    color: var(--muted);
+  }
+  .origin__body strong { color: var(--text); font-weight: 500; }
+
+  /* ---------- workshop / showcase ---------- */
+  .workshop { padding-block: clamp(90px, 12vh, 150px); border-top: 1px solid var(--line); }
+  .work-head { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3.4rem; max-width: 60ch; }
+  .work-head p { color: var(--muted); font-size: 1.05rem; }
+
+  .pieces { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; }
+  .piece {
+    position: relative;
+    background: linear-gradient(180deg, var(--panel), #0e1a30);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 30px 28px 32px;
+    overflow: hidden;
+    transition: transform .35s ease, border-color .35s ease;
+  }
+  .piece::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--ember), var(--cyan));
+    opacity: .85;
+  }
+  .piece:hover { transform: translateY(-5px); border-color: rgba(33,182,232,.45); }
+  .piece__tag {
+    font-family: "IBM Plex Mono", monospace; font-size: .72rem;
+    letter-spacing: .06em; color: var(--ember);
+    border: 1px solid rgba(245,166,35,.35); border-radius: 100px;
+    padding: 4px 11px; display: inline-block; margin-bottom: 1.4rem;
+  }
+  .piece h3 {
+    font-family: "Space Grotesk", sans-serif; font-weight: 600;
+    font-size: 1.6rem; letter-spacing: -.01em; margin-bottom: .7rem;
+  }
+  .piece p { color: var(--muted); font-size: .98rem; margin-bottom: 1.6rem; }
+  .piece__meta {
+    font-family: "IBM Plex Mono", monospace; font-size: .76rem;
+    color: var(--cyan-dim); letter-spacing: .03em;
+    padding-top: 1rem; border-top: 1px solid var(--line);
+  }
+  .piece--ghost { background: transparent; border-style: dashed; }
+  .piece--ghost::before { opacity: .3; }
+  .piece--ghost h3 { color: var(--text); }
+
+  /* ---------- craft ---------- */
+  .craft { padding-block: clamp(90px, 12vh, 150px); border-top: 1px solid var(--line); }
+  .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 3rem; }
+  .pillar { border-left: 2px solid var(--cyan); padding-left: 22px; }
+  .pillar .n {
+    font-family: "IBM Plex Mono", monospace; font-size: .78rem;
+    color: var(--ember); letter-spacing: .05em; display: block; margin-bottom: .9rem;
+  }
+  .pillar h3 {
+    font-family: "Space Grotesk", sans-serif; font-weight: 600;
+    font-size: 1.28rem; margin-bottom: .6rem; letter-spacing: -.01em;
+  }
+  .pillar p { color: var(--muted); font-size: .98rem; }
+
+  /* ---------- CTA ---------- */
+  .cta { padding-block: clamp(110px, 16vh, 190px); text-align: center; border-top: 1px solid var(--line); position: relative; }
+  .cta::after {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(60% 120% at 50% 0%, rgba(245,166,35,.10), transparent 60%);
+  }
+  .cta h2 {
+    font-family: "Space Grotesk", sans-serif; font-weight: 600;
+    font-size: clamp(2rem, 5.5vw, 3.6rem); letter-spacing: -.02em; line-height: 1.04;
+  }
+  .cta p { color: var(--muted); margin-top: 1.1rem; font-size: 1.1rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .6ch;
+    margin-top: 2.4rem;
+    font-family: "IBM Plex Mono", monospace; font-size: .92rem; letter-spacing: .02em;
+    color: var(--ink); background: var(--ember);
+    padding: 15px 30px; border-radius: 100px;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 34px -10px rgba(245,166,35,.55); background: #ffb53b; }
+  .btn .arrow { transition: transform .25s ease; }
+  .btn:hover .arrow { transform: translateX(4px); }
+
+  /* ---------- footer ---------- */
+  footer { border-top: 1px solid var(--line); padding-block: 54px; color: var(--muted); }
+  .foot-grid { display: flex; flex-wrap: wrap; gap: 26px 60px; justify-content: space-between; align-items: flex-start; }
+  .foot-mark { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 1.1rem; }
+  .foot-mark .icon { color: var(--cyan); font-weight: 500; letter-spacing: .3em; font-size: .8rem; }
+  .foot-col { display: flex; flex-direction: column; gap: .55rem; font-size: .9rem; }
+  .foot-col a:hover { color: var(--cyan); }
+  .foot-label { font-family: "IBM Plex Mono", monospace; font-size: .72rem; letter-spacing: .08em; color: #54648a; text-transform: uppercase; }
+  .foot-imp { font-size: .82rem; line-height: 1.7; color: #6c7c9d; }
+  .foot-bottom { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); font-family: "IBM Plex Mono", monospace; font-size: .74rem; color: #54648a; letter-spacing: .03em; }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 640px) {
+    .wrap { padding-inline: 22px; }
+    .hero__inner { padding-block: 110px 90px; }
+    .foot-grid { gap: 30px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, .reveal, .narrative p { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+    .narrative p { color: var(--text) !important; }
+    .hero__cue { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="forge-rail" aria-hidden="true">
+    <div class="forge-rail__fill" id="railFill"><span class="forge-rail__spark" id="railSpark"></span></div>
+  </div>
+
+  <!-- LOGO (header) — Schriftzug-Variante. Für echtes Logo diesen .mark-Block durch ein <img>/<svg> ersetzen. -->
+  <header id="header">
+    <a class="mark" href="#top" aria-label="BRIDGEMANN ICON Startseite">
+      <span>BRIDGEMANN</span><span class="icon">ICON</span>
+    </a>
+    <a class="nav-contact" href="mailto:support@bridgemann-icon.com">Kontakt</a>
+  </header>
+
+  <main id="top">
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <!-- Video: hero.mp4 + hero-poster.jpg neben diese Datei legen -->
+      <video class="hero__video" autoplay muted loop playsinline poster="hero-poster.jpg">
+        <source src="hero.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__scrim"></div>
+
+      <div class="wrap hero__inner">
+        <div class="hero__eyebrow"><span class="slash">//</span> unabhängiges App-Studio · DACH</div>
+        <div class="hero__lockup">
+          <!-- LOGO (Hero): dein echtes B-Symbol als transparentes PNG/SVG hier als "logo.png" ablegen.
+               Fehlt die Datei, wird automatisch nur der scharfe Schriftzug gezeigt. -->
+          <img class="logo-mark" src="logo.png" alt="" onerror="this.style.display='none'" />
+          <h1 class="logo-word"><span class="lw-brand">BRIDGEMANN</span><span class="lw-icon">ICON</span></h1>
+        </div>
+        <p class="hero__tag">Aus Silizium wird Software.</p>
+      </div>
+
+      <div class="hero__cue" aria-hidden="true"><span>scroll</span><span class="bar"></span></div>
+    </section>
+
+    <!-- ===================== ORIGIN ===================== -->
+    <section class="origin">
+      <div class="wrap">
+        <span class="eyebrow reveal"><span class="slash">//</span> 01 — Der Ursprung</span>
+        <div class="narrative" id="narrative">
+          <p data-line>Es begann mit einem Brummen.</p>
+          <p data-line>Commodore 64. Amiga. Atari.</p>
+          <p data-line>Ein Kind, das wissen wollte, <span class="accent">was hinter dem Bildschirm passiert.</span></p>
+          <p data-line>Diese Faszination ist nie verschwunden.</p>
+          <p data-line>Sie wurde zum Handwerk.</p>
+        </div>
+        <p class="origin__body reveal">
+          <strong>BRIDGEMANN ICON</strong> ist ein unabhängiges Studio für mobile Anwendungen.
+          Kein Großraumbüro, keine Fließband-Templates — sondern Software, die Stück für Stück
+          von Hand entsteht. Roher Rohstoff, mit Sorgfalt zu etwas Brauchbarem geformt.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== WORKSHOP ===================== -->
+    <section class="workshop">
+      <div class="wrap">
+        <div class="work-head">
+          <span class="eyebrow reveal"><span class="slash">//</span> 02 — Aus der Werkstatt</span>
+          <h2 class="section-title reveal">Was wir schmieden</h2>
+          <p class="reveal">Werkstücke, die einen echten Nutzen haben — durchdacht, fokussiert, fertig gemacht.</p>
+        </div>
+
+        <div class="pieces">
+          <article class="piece reveal">
+            <span class="piece__tag">Bald verfügbar</span>
+            <h3>Trading Mentor</h3>
+            <p>Trading lernen, ohne echtes Geld zu riskieren. Eine gamifizierte Lern-App, die
+               Charttechnik, Risiko und Psychologie Schritt für Schritt vermittelt — vom Market
+               Observer bis zum Market Wizard. Für den deutschsprachigen Raum.</p>
+            <div class="piece__meta">Android · React Native · Offline-fähig</div>
+          </article>
+
+          <!-- Weitere Apps: einfach diesen Block kopieren und füllen -->
+          <article class="piece piece--ghost reveal">
+            <span class="piece__tag">In der Esse</span>
+            <h3>Das nächste Werkstück</h3>
+            <p>Liegt schon auf dem Amboss. Mehr dazu, sobald es ausgekühlt ist.</p>
+            <div class="piece__meta">in Entwicklung</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CRAFT ===================== -->
+    <section class="craft">
+      <div class="wrap">
+        <span class="eyebrow reveal"><span class="slash">//</span> 03 — Das Handwerk</span>
+        <h2 class="section-title reveal">Geschmiedet, nicht generiert</h2>
+        <div class="pillars">
+          <div class="pillar reveal">
+            <span class="n">01</span>
+            <h3>Aus einer Hand</h3>
+            <p>Konzept, Design, Code und Feinschliff entstehen am selben Amboss. Kurze Wege, eine klare Handschrift.</p>
+          </div>
+          <div class="pillar reveal">
+            <span class="n">02</span>
+            <h3>Werkzeug, kein Ersatz</h3>
+            <p>Moderne KI-Werkzeuge beschleunigen die Arbeit. Die Entscheidungen, der Geschmack und die Verantwortung bleiben menschlich.</p>
+          </div>
+          <div class="pillar reveal">
+            <span class="n">03</span>
+            <h3>Auf Dauer gebaut</h3>
+            <p>Offline-fähig, aufgeräumt, ohne unnötigen Ballast. Software, die hält — nicht nur bis zum nächsten Update.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA ===================== -->
+    <section class="cta">
+      <div class="wrap">
+        <h2 class="reveal">Lass uns etwas schmieden.</h2>
+        <p class="reveal">Eine Idee, ein Projekt oder einfach eine Frage?</p>
+        <a class="btn reveal" href="mailto:support@bridgemann-icon.com">Schreib uns <span class="arrow">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-col">
+          <span class="foot-mark">BRIDGEMANN <span class="icon">ICON</span></span>
+          <span style="max-width:30ch; color:#6c7c9d;">Aus Silizium wird Software.</span>
+        </div>
+
+        <div class="foot-col">
+          <span class="foot-label">Kontakt</span>
+          <a href="mailto:support@bridgemann-icon.com">support@bridgemann-icon.com</a>
+          <!-- Social-Links bei Bedarf eintragen -->
+          <!-- <a href="#">Instagram</a> -->
+        </div>
+
+        <div class="foot-col">
+          <span class="foot-label">Impressum</span>
+          <!-- TODO: echte Angaben einsetzen -->
+          <span class="foot-imp">
+            [Name / Inhaber]<br />
+            [Straße &amp; Hausnummer]<br />
+            [PLZ Ort]
+          </span>
+        </div>
+      </div>
+      <div class="foot-bottom">© 2026 BRIDGEMANN ICON — alle Rechte vorbehalten.</div>
+    </div>
+  </footer>
+
+<script>
+  // header background on scroll
+  const header = document.getElementById('header');
+  // forge rail: heat -> cool scroll progress
+  const fill = document.getElementById('railFill');
+  const spark = document.getElementById('railSpark');
+
+  function onScroll() {
+    const y = window.scrollY;
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    const p = h > 0 ? Math.min(y / h, 1) : 0;
+    fill.style.height = (p * 100) + '%';
+    spark.style.opacity = p > 0.01 && p < 0.995 ? '1' : '0';
+    header.classList.toggle('scrolled', y > 40);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // generic reveal-on-scroll
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); } });
+  }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
+
+  // staggered narrative lines lighting up
+  const lines = document.querySelectorAll('#narrative [data-line]');
+  const lineIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const els = Array.from(lines);
+        const i = els.indexOf(e.target);
+        e.target.style.transitionDelay = (i % 5 * 0.08) + 's';
+        e.target.classList.add('lit');
+        lineIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.9 });
+  lines.forEach(el => lineIO.observe(el));
+</script>
+</body>
+</html>
