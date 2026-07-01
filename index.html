@@ -264,12 +264,29 @@
     filter: blur(8px); z-index: -1;
     animation: glowpulse 4.5s ease-in-out 3s infinite;
   }
-  .hero__logo { line-height: 0; margin: 0; }
+  .hero__logo {
+    margin: 0;
+    display: flex; flex-direction: column; align-items: center;
+    gap: clamp(14px, 2.4vw, 24px);
+  }
   .logo-mark {
+    display: block;
     width: clamp(170px, 34vw, 300px); height: auto;
     filter:
       drop-shadow(0 0 22px rgba(33,182,232,.4))
       drop-shadow(0 8px 32px rgba(9,14,26,.65));
+  }
+  .logo-word {
+    font-family: "Space Grotesk", sans-serif; font-weight: 700;
+    font-size: clamp(1.4rem, 4.6vw, 2.7rem);
+    letter-spacing: .01em; line-height: 1;
+    display: flex; align-items: baseline; gap: .55ch;
+    flex-wrap: wrap; justify-content: center;
+    text-shadow: 0 4px 26px rgba(9,14,26,.75);
+  }
+  .logo-word .lw-icon {
+    color: var(--cyan); font-weight: 500;
+    letter-spacing: .3em; font-size: .42em;
   }
   .hero__tag {
     margin-top: clamp(16px, 2.6vw, 28px);
@@ -681,7 +698,8 @@
           <!-- LOGO (Hero): logo.png (transparentes B-Symbol) neben diese Datei legen.
                Fehlt die Datei, zeigt der Browser den Alt-Text als Fallback. -->
           <h1 class="hero__logo">
-            <img class="logo-mark" src="logo.png" alt="BRIDGEMANN ICON" width="398" height="399" />
+            <img class="logo-mark" src="logo.png" alt="" width="398" height="399" />
+            <span class="logo-word"><span>BRIDGEMANN</span><span class="lw-icon">ICON</span></span>
           </h1>
         </div>
         <p class="hero__tag" data-i18n="hero_tag">Aus Silizium wird Software.</p>
